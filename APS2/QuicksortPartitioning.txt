@@ -1,3 +1,5 @@
+// za locitev tabele na dva dela
+
 int i = left;
 int j = right;
 int pivot = table[left]
