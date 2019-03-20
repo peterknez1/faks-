@@ -1,0 +1,12 @@
+int i = left;
+int j = right;
+int pivot = table[left]
+while(i <= j) {
+	while(table[i] < pivot){ i++; }
+	while(table[j] > pivot) { j--; }
+	if(i <= j){
+			swap(table, i, j);
+			i++;
+			j--;
+	}
+}
