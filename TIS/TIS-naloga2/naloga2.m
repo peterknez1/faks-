@@ -20,78 +20,54 @@ function [izhod, R, kodBela, kodCrna] = naloga2(vhod)
   bela = [];
   crna = [];
   checker = 1;
+  marker = [];
   stevecBela0 = 0;
-  disp(length(vhod(:, 1)));
-  verizno(1) = 0;
+  %disp(length(vhod(:, 1)));
+  verizno = [];
   sumBelih = 0;
   sumCrnih = 0;
-  for(i=1:length(vhod(:, 1)))
-    for(j=1:1728)
-        if(vhod(i, j) == 0)
-          sumCrnih = sumCrnih + 1;
-        else
-           sumBelih = sumBelih + 1;
-        end
-      end
-  end
-  printf("%d je belih na vhod, %d je crnih\n", sumBelih, sumCrnih);
+  %printf("%d je belih na vhod, %d je crnih\n", sumBelih, sumCrnih);
   sumbelih0 = 0;
   sumBelihVerizno = 0;
   sumCrnihVerizno = 0;
   sumvseh = 0;
   for(i=1:length(vhod(:, 1)))
-    vrstica1 = vrstica(vhod(i, :));
-    [sumBelih1, sumCrnih1, sumVseh1] = sestejPoVrstici(vrstica1);
+    [vrstica1, marker1] = vrstica(vhod(i, :));
+    %printf("%d %d\n", length(marker1), length(vrstica1));
+    %disp(marker1);
+    [sumBelih1, sumCrnih1, belaZnaki, crnaZnaki] = sestejPoVrstici(vrstica1);
+    bela = [bela, belaZnaki];
+    crna = [crna, crnaZnaki];
     sumBelihVerizno = sumBelihVerizno + sumBelih1;
-    sumCrnihVerizno = sumCrnihVerizno + sumCrnih1
-    if(vrstica1(1) == 0)
-      sumbelih0 = sumbelih0 + 1;
-    end
+    sumCrnihVerizno = sumCrnihVerizno + sumCrnih1;
     verizno = [verizno, vrstica(vhod(i, :))];
+    marker = [marker, marker1];
     
   end
-  printf("sumbelih0 %d", sumbelih0);
   
   checker = 0;
   belastevec = 1;
   crnastevec = 1;
   belachecker = 1;
   
-  printf("verizno ima vse skupaj %d, od tega %d belih in %d crnih", sumvseh, sumBelihVerizno, sumCrnihVerizno);
-  for(i=1:length(verizno))
-    if(checker == 0 || verizno(i) == 0)
-      bela(belastevec) = verizno(i);
-      belastevec = belastevec + 1;
-      checker = 1;
-    else
-      crna(crnastevec) = verizno(i);
-      crnastevec = crnastevec + 1;
-      checker = 0;
-      
-     end
-   
-  end
+  %printf("verizno ima vse skupaj %d, od tega %d belih in %d crnih", sumvseh, sumBelihVerizno, sumCrnihVerizno);
   uniqbela = unique(bela);
   uniqcrna = unique(crna);
   frekvencebela = histc(bela, uniqbela);
-    frekvencebeladisp = [uniqbela', frekvencebela'];
+  frekvencebeladisp = [uniqbela', frekvencebela'];
+  if(length(frekvencebela) > 0)
   frekvencebela = frekvencebela./length(bela);
+  end
   frekvencecrna = histc(crna, uniqcrna);
   frekvencecrnadisp = [uniqcrna', frekvencecrna'];
-  frekvencecrna = frekvencecrna./length(crna);
+    frekvencecrna = frekvencecrna./length(crna);
   stBelih = 0;
-  for(i=1: length(uniqbela))
-    stBelih = stBelih + frekvencebeladisp(i, 1) * frekvencebeladisp(i, 2);
-  end
-  disp("frekvencebela");
-  disp(frekvencebeladisp);
-  disp("frekvencecrna");
-  disp(frekvencecrnadisp);
+  %disp("frekvencebela");
+  %disp(frekvencebeladisp);
+  %disp("frekvencecrna");
+  %disp(frekvencecrnadisp);
   stCrnih = 0;
-  for(i=1: length(uniqcrna))
-    stCrnih = stCrnih + frekvencecrnadisp(i, 1) * frekvencecrnadisp(i, 2);
-  end
-  printf("st belih %d, st crnih %d, skupaj %d", stBelih, stCrnih, stBelih + stCrnih);
+  %printf("st belih %d, st crnih %d, skupaj %d", stBelih, stCrnih, stBelih + stCrnih);
   bela1 = [uniqbela', frekvencebela'];
   crna1 = [uniqcrna', frekvencecrna'];
   bela1 = sortrows(bela1, [2, 1]);
@@ -176,10 +152,10 @@ function [izhod, R, kodBela, kodCrna] = naloga2(vhod)
     end
     matrikacrni(i, 3) = dolzinaZnaka;
   end
-  disp(matrikabeli);
-  disp("//");
-  disp(matrikacrni);
-  disp("//");
+  %disp(matrikabeli);
+  %disp("//");
+  %disp(matrikacrni);
+  %disp("//");
   matrikabeli = matrikabeli(1:length(uniqbela), :);
   matrikabeli = sortrows(matrikabeli, [3, 1]);
   
@@ -240,49 +216,52 @@ function [izhod, R, kodBela, kodCrna] = naloga2(vhod)
   
   kodCrna = [vrednostiCrna', dolzineCrna'];
   kodCrna = sortrows(kodCrna, [2, 1]);
-  disp('//');
-  disp("kodBela");
-  disp(kodBela);
-  disp("kodCrna")
-  disp(kodCrna);
+  %disp('//');
+  %disp("kodBela");
+  %disp(kodBela);
+  %disp("kodCrna")
+  %disp(kodCrna);
+  printf("%d %d\n", length(marker), length(verizno));
   izhod = [];
-  checker2 = 0;
   for(i=1:length(verizno))
     x = verizno(i);
-    if(checker == 0)
+    if(marker(i) == 1)
       [i] = find(vrednostiBela == x);
       koda = dec2bin(matrikabeli(i, 7), matrikabeli(i, 3));
       koda = koda - "0";
       izhod = [izhod, koda];
-      checker = 1;
     else
       [i] = find(vrednostiCrna == x);
       koda = dec2bin(matrikacrni(i, 7), matrikacrni(i, 3));
       koda = koda - "0";
       izhod = [izhod, koda];
-      checker = 0;
     end
   end
- R = length(izhod)/length(vhod);
+ dolzinaVhoda = length(vhod(:, 1)) * 1728;
+ R = length(izhod)/dolzinaVhoda;
  %disp("verizno");
  %disp(verizno);
  %disp("izhod");
  %disp(izhod);
-
+disp(length(izhod));
+disp(length(vhod));
   
 end
-
-function [novaVrstica] = vrstica(vhod)
+function [novaVrstica, marker] = vrstica(vhod)
+  marker = [];
   checker = 1;
   novaVrstica = [];
   veriznoStevec = 1;
   if(vhod(1) == 0)
     novaVrstica(1) = 0;
+    marker(1) = 1;
     veriznoStevec = veriznoStevec + 1;
-    novaVrstica(veriznoStevec) = 1;
+    novaVrstica(2) = 1;
+    marker(veriznoStevec) = 0;
     checker = 0;
   else
     novaVrstica(1) = 1;
+    marker(1) = 1;
   end
   for(i=2:1728)
     if(vhod(i) == checker)
@@ -291,21 +270,28 @@ function [novaVrstica] = vrstica(vhod)
       veriznoStevec = veriznoStevec + 1;
       novaVrstica(veriznoStevec) = 1;
       checker = vhod(i);
+      marker(veriznoStevec) = checker;
     end
     
   end
 endfunction
 
-function [sumBelih, sumCrnih, sumVseh] = sestejPoVrstici(vrstica)
+function [sumBelih, sumCrnih, belaZnaki, crnaZnaki] = sestejPoVrstici(vrstica)
   sumBelih = 0;
   sumCrnih = 0;
-  sumVseh = 0;
   bela = 1;
-  for(i=1:length(vrstica)
+  belaZnaki = [];
+  crnaZnaki = [];
+  for(i=1:length(vrstica))
     if(bela == 1)
       sumBelih = sumBelih + vrstica(i);
+      belaZnaki = [belaZnaki, vrstica(i)];
+      bela = 0;
     else
       sumCrnih = sumCrnih + vrstica(i);
-    endif
-  endfor
+      crnaZnaki = [crnaZnaki, vrstica(i)];
+      bela = 1;
+    end
+    
+  end
 endfunction
